@@ -106,7 +106,9 @@ scoring =
         # by the product of the length-(l-1) sequence ending just before m, at m.i - 1.
         pi *= optimal.pi[m.i - 1][l - 1]
       # calculate the minimization func
-      g = @factorial(l) * pi
+      g = pi # try removing the factorial factor from the submission - say the attacker
+      # knows the pattern
+      # g = @factorial(l) * pi
       unless _exclude_additive
         g += Math.pow(MIN_GUESSES_BEFORE_GROWING_SEQUENCE, l - 1)
       # update state if new best.
@@ -175,7 +177,7 @@ scoring =
             update(m, l + 1)
         else
           update(m, 1)
-      bruteforce_update(k)
+      # bruteforce_update(k)
     optimal_match_sequence = unwind(n)
     optimal_l = optimal_match_sequence.length
 
@@ -204,6 +206,7 @@ scoring =
       else
         MIN_SUBMATCH_GUESSES_MULTI_CHAR
     estimation_functions =
+      single:     @single_guesses
       bruteforce: @bruteforce_guesses
       dictionary: @dictionary_guesses
       spatial:    @spatial_guesses
@@ -215,6 +218,9 @@ scoring =
     match.guesses = Math.max guesses, min_guesses
     match.guesses_log10 = @log10 match.guesses
     match.guesses
+  
+  single_guesses: (match) ->
+    BRUTEFORCE_CARDINALITY
 
   bruteforce_guesses: (match) ->
     guesses = Math.pow BRUTEFORCE_CARDINALITY, match.token.length

@@ -81,6 +81,7 @@ matching =
   omnimatch: (password) ->
     matches = []
     matchers = [
+      @single_character
       @dictionary_match
       @reverse_dictionary_match
       @l33t_match
@@ -92,6 +93,21 @@ matching =
     ]
     for matcher in matchers
       @extend matches, matcher.call(this, password)
+    @sorted matches
+
+  #-------------------------------------------------------------------------------
+  # single character matches (brute force) ---------------------------------------
+  #-------------------------------------------------------------------------------
+  
+  single_character: (password) ->
+    matches = []
+    len = password.length
+    for i in [0...len]
+      matches.push
+        pattern: 'single'
+        token: password[i]
+        i: i
+        j: i
     @sorted matches
 
   #-------------------------------------------------------------------------------
